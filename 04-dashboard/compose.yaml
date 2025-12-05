@@ -1,12 +1,18 @@
+### System Monitoring and Docker Control ###
+
 services:
-  # --- Homepage: Main dashboard ---
+  ### --- Homepage: Main dashboard --- ###
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     restart: unless-stopped
+    networks: 
+      - proxy_net
     environment:
       # This is added to allow access and provide exception to only default values
       - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_ALLOWED_HOSTS}
+      - PUID=1000
+      - PGID=1000 
     env_file:
       - .env
     volumes:
@@ -25,7 +31,8 @@ services:
   glances:
     image: nicolargo/glances:latest
     container_name: glances
-    pid: host # Vital: Allows it to see host processes
+    pid: host            # needed for accurate Process/CPU stats
+    network_mode: "host" # needed to accurately report network information
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -66,7 +73,6 @@ services:
     restart: unless-stopped
 
 
-
   # --- Dozzle: Real-time Log Viewer ---
   dozzle:
     image: amir20/dozzle:latest
@@ -84,23 +90,26 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:1
     container_name: uptime-kuma
+    networks:
+      - proxy_net  # To access via NPM
     volumes:
-      - uptime_kuma_data:/app/data
+      - ./uptime_kuma_data:/app/data
     ports:
       - "3001:3001" # Web UI on port 3001
     restart: unless-stopped
+
 
   # --- BESZEL HUB (The Dashboard) ---
   beszel-hub:
     image: henrygd/beszel
     container_name: beszel-hub
-    restart: unless-stopped
     networks:
-      - beszel_net  # Keep internal, expose via NPM later
+      - proxy_net  # To access via NPM
     ports:
       - "8090:8090"   # Exposed locally for initial setup
     volumes:
       - ./beszel/data:/beszel_data
+    restart: unless-stopped
 
   # --- BESZEL AGENT (The Sensor) ---
   beszel-agent:
@@ -117,6 +126,8 @@ services:
       - KEY=${BESZEL_KEY} 
       - EXTRA_FILESYSTEMS=/mnt/root_drive
 networks:
+  proxy_net:
+    external: true
   beszel_net:
     driver: bridge
 

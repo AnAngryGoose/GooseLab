@@ -1,0 +1,77 @@
+### FILEBROWSER QUANTUM CONFIGURATION FILE ###
+server:
+  database: "/data/database.db"
+  sources:
+    # Media Files
+    - path: "/media"
+      name: "Media test"
+      config:
+        defaultEnabled: false
+    # # # Document Files
+    # - path: "/docs"
+    #   name: "Document Files USERS SHOULD NOT SEE THIS"
+    #   config:
+    #     defaultEnabled: false
+    # Personal User Directories
+    - path: /users
+      name: "User Home Directories" 
+      config: 
+        defaultEnabled: true 
+        createUserDir: true # Create personal directories for new users
+        defaultUserScope: "/" # This creates /home/users/username for each user.
+auth:
+  adminUsername: goose
+
+
+# Caching (Critical for performance)
+cache:
+  enabled: true
+  ttl: "24h"
+
+
+### --- USER MANAGEMNT OPTIONS ---
+
+userDefaults:
+  preview:
+    highQuality: true
+    image: true
+    video: true
+    motionVideoPreview: true
+    office: true
+    popup: true
+    folder: true
+  permissions:
+    api: false
+    admin: false
+    modify: false
+    share: false
+    realtime: false
+    delete: false
+    create: false
+    download: true
+  disableOnlyOfficeExt: ".md .txt .pdf"   # list of file extensions to disable onlyoffice editor for
+
+
+
+
+# Personal User Directories
+# server:
+#   sources:
+#     - path: "/home/users"
+#       config:
+#         defaultEnabled: true
+#         createUserDir: true
+#         #defaultUserScope: "/" # when createUserDir is false
+
+
+# Shared + Personal User Directories
+# server:
+#   sources:
+#     - path: "/shared/common"
+#       name: "Shared Files"
+#       config:
+#         defaultEnabled: true
+#     - path: "/shared/users"
+#       name: "My Files"
+#       config:
+#         private: true

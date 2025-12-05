@@ -1,0 +1,41 @@
+### --- Ingress Control - Internal and External Proxy Management ### 
+
+services:
+  # --- 1. NGINX PROXY MANAGER (The Middleman) ---
+  # Connected to BOTH networks so it can bridge the gap.
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: npm
+    restart: unless-stopped
+    ports:
+      - "80:80"     # HTTP
+      - "81:81"     # Admin UI
+      - "443:443"   # HTTPS
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+    volumes:
+      - ./npm/data:/data
+      - ./npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - tunnel_net   # To talk to Cloudflare
+      - proxy_net  # To talk to internal apps
+
+# --- 2. CLOUDFLARE TUNNEL ---
+# Only on ingress_net. It can only talk to NPM.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: always
+    networks:
+      - tunnel_net   # <-- ISOLATED TO TALK TO NPM ONLY
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    command: tunnel run
+
+# --- NETWORK DEFINITIONS ---
+networks:
+  tunnel_net:
+    driver: bridge 
+    internal: true # Optional: Blocks internet access for containers on this net (except what they get via connected peers), adding security.
+  proxy_net:
+    external: true

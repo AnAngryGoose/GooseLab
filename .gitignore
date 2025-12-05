@@ -10,6 +10,7 @@ Thumbs.db
 # (e.g. if you have a 'data' folder inside 'core')
 **/data/
 **/logs/
+**/log/
 
 # Ignore CouchDB ini file & data
 obsidian/couchdb-etc/*
@@ -27,3 +28,14 @@ obsidian/couchdb-data/*
 
 # Ignore Filebrowser database and settings
 filebrowser/config/config.yaml
+
+**/uptime_kuma_data
+
+# Ignore all HA logs/db 
+**/homeassistant
+**/mosquitto
+**/zigbee2mqtt
+
+#ignore obsidian db files
+**/couchdb-data
+**/couchdb-etc

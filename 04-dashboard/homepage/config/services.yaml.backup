@@ -1,21 +1,9 @@
 ---
 # Group for apps running on your Lenovo M920q (Mercury)
 # Uses Tailscale MagicDNS variable for consistent access
-- Homelab:
-    - Portainer:
-        icon: portainer.svg
-        href: "https://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:9443"
-        description: Docker Management UI
-        server: local         # Enables the internal status dot
-        container: portainer
-        showStats: true
-        widget:
-          type: portainer
-          url: "https://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:9443"
-          env: 3              
-          key: "{{HOMEPAGE_VAR_PORTAINER_KEY}}"
-          fields: ["running", "stopped", "total"]
 
+# Service Groups
+- Homelab:
     - Omada:
         icon: omada.svg
         href: "https://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8043"

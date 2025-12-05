@@ -1,0 +1,21 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- search:
+    provider: google
+    target: _blank
+
+# System Stats (Powered by Glances container)
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+    celsius: true
+
+# Weather (Optional)
+- openmeteo:
+    label: Home
+    latitude: 30.6812773 # Update these!
+    longitude: -88.2908238
+    units: imperial

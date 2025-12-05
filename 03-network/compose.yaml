@@ -1,4 +1,4 @@
-version: "3.8"
+### Omada Controller - TP-Link / Omada network controller ###
 
 services:
   omada-controller:
@@ -14,7 +14,9 @@ services:
       - SHOW_SERVER_LOGS=true
       - SHOW_MONGODB_LOGS=false
       - TZ=America/Chicago
-    volumes:
+    # networks: 
+    #   - proxy_net   # internal net for NPM proxy
+    volumes:    # Named Volumes to allow for easier transfer and data persistance.   
       - omada_data:/opt/tplink/EAPController/data
       - omada_logs:/opt/tplink/EAPController/logs
       - omada_work:/opt/tplink/EAPController/work
@@ -26,3 +28,8 @@ volumes:
     external: true
   omada_work:
     external: true
+
+# # --- Network Definitions --- #
+# networks: 
+#   proxy_net: 
+#     external: true

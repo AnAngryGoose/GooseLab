@@ -1,0 +1,106 @@
+---
+# --- ROW 1: MANAGEMENT ---
+- Management:
+    - Dockge:
+        icon: dockge.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:5001"
+        description: Stack Manager
+        server: local
+        container: dockge # Matches container_name in dockge/compose.yaml
+        widget:
+            type: dockge
+            url: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:5001"
+
+    - Dozzle:
+        icon: dozzle.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8081"
+        description: Log Viewer
+        server: local
+        container: dozzle
+        
+
+    - File Browser:
+        icon: filebrowser.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8080"
+        description: File Manager
+        server: local
+        container: filebrowser
+
+    - Watchtower:
+        icon: watchtower.svg
+        # Watchtower has no UI, so we link to its logs in Dozzle
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8081/container/watchtower"
+        description: Auto-Updater
+        server: local
+        container: watchtower
+        widget:
+            type: watchtower
+
+# --- ROW 2: MONITORING ---
+- Monitoring:
+    - Beszel:
+        icon: beszel.png
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8090"
+        description: System Monitor
+        server: local
+        container: beszel-hub
+        widget:
+            type: beszel
+            url: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8090"
+            systemId: "1" # Usually ID 1 if it's the first agent
+
+    - Uptime Kuma:
+        icon: uptime-kuma.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:3001"
+        description: Uptime Status
+        server: local
+        container: uptime-kuma
+        widget:
+            type: uptimekuma
+            url: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:3001"
+            slug: "default" # Create a status page in Kuma to get this!
+
+    - Speedtest:
+        icon: speedtest-tracker.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:3000"
+        description: Bandwidth Tracker
+        server: local
+        container: speedtest-tracker
+        widget:
+            type: speedtest
+            url: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:3000"
+
+# --- ROW 3: NETWORKING ---
+- Networking:
+    - Omada Controller:
+        icon: omada.svg
+        href: "https://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8043"
+        description: Network Admin
+        server: local
+        container: omada-controller
+        widget:
+            type: omada
+            url: "https://{{HOMEPAGE_VAR_TAILSCALE_URL_MERCURY}}:8043"
+            username: "{{HOMEPAGE_VAR_OMADA_USER}}"
+            password: "{{HOMEPAGE_VAR_OMADA_PASS}}"
+            site: Turmac_Home
+
+    - Pi-hole:
+        icon: pi-hole.svg
+        href: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_PIHOLE}}/admin"
+        description: DNS Sinkhole
+        widget:
+            type: pihole
+            url: "http://{{HOMEPAGE_VAR_TAILSCALE_URL_PIHOLE}}"
+            key: "{{HOMEPAGE_VAR_PIHOLE_KEY}}"
+            version: 6
+
+    - Tailscale:
+        icon: tailscale.svg
+        href: "https://login.tailscale.com/admin/machines"
+        description: VPN Mesh
+        widget:
+            type: tailscale
+            deviceid: "{{HOMEPAGE_VAR_TAILSCALE_ID}}"
+            key: "{{HOMEPAGE_VAR_TAILSCALE_KEY}}"
+            fields: ["status", "last_seen"]
