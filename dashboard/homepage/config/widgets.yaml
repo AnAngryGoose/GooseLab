@@ -30,6 +30,6 @@
 # Weather (Optional)
 - openmeteo:
     label: Home
-    latitude: 30.6812773 # Update these!
+    latitude: 30.6812773 
     longitude: -88.2908238
     units: imperial

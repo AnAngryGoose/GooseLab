@@ -1,6 +1,8 @@
 ---
+# ---------------------------------
 # --- GLANCES METRICS - Mercury ---
-- Machines: 
+# ---------------------------------
+- Mercury: 
     - mercury: 
         widget:
             type: glances
@@ -31,9 +33,11 @@
             metric: disk:sda
             version: 4        # Required if you are running Glances v4+
             chart: true       # Default is true. Set to false for text-only.
-
-# --- Glances METRICS - Jupiter ---  
-    - jupiter: 
+# ---------------------------------
+# --- Glances METRICS - Jupiter --- 
+# ---------------------------------
+- Jupiter:  
+    - Jupiter: 
         widget:
             type: glances
             url: http://{{HOMEPAGE_VAR_JUPITER_IP}}:61208
@@ -64,8 +68,9 @@
             version: 4        # Required if you are running Glances v4+
             chart: true       # Default is true. Set to false for text-only.
 
-
+# -------------------------
 # --- ROW 1: MANAGEMENT ---
+# -------------------------
 - Management:
     - Dozzle:
         icon: dozzle.svg
@@ -95,8 +100,9 @@
             username: "{{HOMEPAGE_VAR_NPM_USER}}"
             password: "{{HOMEPAGE_VAR_NPM_PASS}}"
 
-
+# -------------------------
 # --- ROW 2: MONITORING ---
+# -------------------------
 - Monitoring:
     - Beszel - Jupiter:
             icon: beszel.png
@@ -141,7 +147,9 @@
             url: "http://{{HOMEPAGE_VAR_MERCURY_IP}}:3001"
             slug: "default" # Create a status page in Kuma to get this!
 
+# -------------------------
 # --- ROW 3: NETWORKING ---
+# -------------------------
 - Networking:
     - Omada Controller:
         icon: omada.svg
@@ -175,3 +183,66 @@
             deviceid: "{{HOMEPAGE_VAR_TAILSCALE_ID}}"
             key: "{{HOMEPAGE_VAR_TAILSCALE_KEY}}"
             fields: ["status", "last_seen"]
+
+# ---------------------
+# --- Row 4: Media ----
+# ---------------------
+- Media:
+    - Plex: 
+        icon: plex.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:32400"
+        description: Plex Media server
+        widget: 
+            type: plex
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:32400"
+            key: "{{PLEX_CLAIM}}"
+    - Radarr: 
+        icon: radarr.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:7878"
+        description: Arr - Movies
+        widget: 
+            type: radarr
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:7878"
+            key: "{{RADARR_TOKEN}}"
+            enableQueue: true # optional, defaults to false
+            # Allowed fields: ["wanted", "missing", "queued", "movies"].
+    - Sonarr: 
+        icon: sonarr.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:8989"
+        description: Arr - TV
+        widget: 
+            type: sonarr
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:8989"
+            key: "{{SONARR_TOKEN}}"
+            enableQueue: true # optional, defaults to false
+            # Allowed fields: ["wanted", "queued", "series"].
+    - Prowlarr: 
+        icon: prowlarr.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:9696"
+        description: Arr - Manager
+        widget: 
+            type: prowlarr
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:9696"
+            key: "{{PROWLARR_TOKEN}}"
+            # Allowed fields: ["numberOfGrabs", "numberOfQueries", "numberOfFailGrabs", "numberOfFailQueries"].
+    - Overseerr: 
+        icon: overseerr.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:5055"
+        description: Arr Request Manager
+        widget: 
+            type: overseerr
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:5055"
+            key: "{{OVERSEER_TOKEN}}"
+            # Allowed fields: ["pending", "approved", "available", "processing"].    
+    - qBittorrent: 
+        icon: qbittorrent.svg
+        href: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:8082"
+        description: qBittorrent - Torrent Client
+        widget:
+            type: qbittorrent
+            url: "http://{{HOMEPAGE_VAR_JUPITER_IP}}:8082"
+            username: "{{HOMEPAGE_VAR_QBIT_USER}}"
+            password: "{{HOMEPAGE_VAR_QBIT_PASS}}"
+            enableLeechProgress: true # optional, defaults to false
+            enableLeechSize: true # optional, defaults to false
+            # Allowed fields: ["leech", "download", "seed", "upload"].
