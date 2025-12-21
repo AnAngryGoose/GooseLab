@@ -1,0 +1,39 @@
+services:
+  it-tools:
+    image: corentinth/it-tools:latest
+    container_name: it-tools
+    restart: unless-stopped
+    ports:
+      - "8071:80"  # Map host port 8080 to container port 80
+    networks:
+      - proxy_net  # Add to your proxy network if using NPM or Homepage
+    # Optional: If you want to use the "My Tools" feature effectively across sessions,
+    # it uses browser local storage, so no volume is needed on the server side.
+    
+    # Optional: Labels for Homepage (if you are using it)
+    labels:
+      - "homepage.group=Tools"
+      - "homepage.name=IT-Tools"
+      - "homepage.icon=it-tools.png"
+      - "homepage.href=http://192.168.0.116:8071" # Or https://it-tools.domain.com if proxied
+      - "homepage.description=Developer & IT utilities"
+
+  bentopdf:
+    image: bentopdf/bentopdf-simple:latest
+    container_name: bentopdf
+    ports:
+      - '3005:8080'
+    restart: unless-stopped
+      # Optional: Set to 'true' for a simplified UI (hides branding/marketing text)
+    
+    # Optional: Labels for Homepage
+    labels:
+      - "homepage.group=Tools"
+      - "homepage.name=Bento PDF"
+      - "homepage.icon=bentopdf.png"
+      - "homepage.href=http://192.168.0.116:3005" 
+      - "homepage.description=PDF tools"
+
+networks:
+  proxy_net:
+    external: true

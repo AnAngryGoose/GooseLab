@@ -14,14 +14,14 @@ services:
     environment:
       DB_SQLITE_FILE: "/data/database.sqlite"
     volumes:
-      - ./npm/data:/data
-      - ./npm/letsencrypt:/etc/letsencrypt
+      - ${APPDATA}/ingress/npm/data:/data
+      - ${APPDATA}/ingress/npm/letsencrypt:/etc/letsencrypt
     networks:
       - tunnel_net   # To talk to Cloudflare
       - proxy_net  # To talk to internal apps
 
 # --- 2. CLOUDFLARE TUNNEL ---
-# Only on ingress_net. It can only talk to NPM.
+#Only on ingress_net. It can only talk to NPM.
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared

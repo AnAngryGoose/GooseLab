@@ -3,7 +3,7 @@
 services:
   ### --- Homepage: Main dashboard --- ###
   homepage:
-    image: ghcr.io/gethomepage/homepage:latest
+    image: ghcr.io/gethomepage/homepage:latest # https://github.com/gethomepage/homepage
     container_name: homepage
     restart: unless-stopped
     networks: 
@@ -12,25 +12,23 @@ services:
       # This is added to allow access and provide exception to only default values
       - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_ALLOWED_HOSTS}
       - PUID=1000
-      - PGID=1000 
+      - PGID=988
     env_file:
       - .env
     volumes:
       # Socket binding (read-only): Lets Homepage widgets *see* container status
       - /var/run/docker.sock:/var/run/docker.sock:ro 
       # Bind mount for all your Homepage .yaml config files (EASIER TO MANAGE - recommended)
-      - ./homepage/config:/app/config
+      - ${APPDATA}/homepage/config:/app/config
     ports:
       - "3000:3000"
     # Optional: If you have file permission issues with the config volume,
     # uncomment the line below. Find your user/group ID with the `id` command.
     # user: "1000:1000"
 
-
-
   # --- Glances: System Monitor (The Backend for Homepage Widgets) ---
   glances:
-    image: nicolargo/glances:latest
+    image: nicolargo/glances:latest # https://github.com/nicolargo/glances
     container_name: glances
     pid: host            # needed for accurate Process/CPU stats
     network_mode: "host" # needed to accurately report network information
@@ -45,16 +43,14 @@ services:
 
   # --- Watchtower: Auto-Update Containers ---
   watchtower:
-    image: nickfedor/watchtower
+    image: nickfedor/watchtower # https://github.com/nickfedor/watchtower
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-
       - WATCHTOWER_CLEANUP=true       # Delete old images after update
       - WATCHTOWER_POLL_INTERVAL=86400 # Check every 24 hours (seconds)
       - WATCHTOWER_INCLUDE_STOPPED=true
-
       ### 1. Enable Email Mode ###
       - WATCHTOWER_NOTIFICATIONS=email
       # 2. Who sends the email (Must match your Gmail user)
@@ -68,7 +64,6 @@ services:
       # 5. Auth Credentials
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${MYEMAIL}
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${MYEMAILPASS}  # <-- Paste App Password Here
-      
       # 6. Optional: Rate limit emails (Delay in seconds)
       - WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2
     restart: unless-stopped
@@ -76,7 +71,7 @@ services:
 
   # --- Dozzle: Real-time Log Viewer ---
   dozzle:
-    image: amir20/dozzle:latest
+    image: amir20/dozzle:latest # https://github.com/amir20/dozzle
     container_name: dozzle
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -91,12 +86,13 @@ services:
 
   # --- Uptime Kuma: Service Monitor ---
   uptime-kuma:
-    image: louislam/uptime-kuma:1
+    image: louislam/uptime-kuma:2 # Latest version - https://github.com/louislam/uptime-kuma
     container_name: uptime-kuma
     networks:
       - proxy_net  # To access via NPM
     volumes:
-      - ./uptime_kuma_data:/app/data
+      - ${APPDATA}/uptime_kuma_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "3001:3001"
     restart: unless-stopped
@@ -109,19 +105,19 @@ services:
 
   # --- BESZEL HUB (The Dashboard) ---
   beszel-hub:
-    image: henrygd/beszel
+    image: henrygd/beszel # https://github.com/henrygd/beszel
     container_name: beszel-hub
     networks:
       - proxy_net  # To access via NPM
     ports:
       - "8090:8090"   # Exposed locally for initial setup
     volumes:
-      - ./beszel/data:/beszel_data
+      - ${APPDATA}/beszel/data:/beszel_data
     restart: unless-stopped
 
   # --- BESZEL AGENT (The Sensor) ---
   beszel-agent:
-    image: henrygd/beszel-agent
+    image: henrygd/beszel-agent # https://github.com/henrygd/beszel
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: "host"  # CRITICAL: Must be on host to read actual CPU/Disk/Network
@@ -138,6 +134,3 @@ networks:
     external: true
   beszel_net:
     driver: bridge
-
-volumes:
-  uptime_kuma_data:
